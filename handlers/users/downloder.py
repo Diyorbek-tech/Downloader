@@ -17,7 +17,8 @@ async def download(message: Message):
     ydl_opts = {
         "format": "best",
         "outtmpl": f"{dir_name}/%(title)s.%(ext)s",
-        "concurrent_fragment_downloads": 5
+        "concurrent_fragment_downloads": 5,
+        'cookies': 'cookies.txt'
     }
 
     try:
