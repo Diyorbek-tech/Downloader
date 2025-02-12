@@ -2,6 +2,7 @@ import os
 import logging
 from aiogram.types import Message
 from loader import dp
+from aiogram import types
 import yt_dlp
 
 
