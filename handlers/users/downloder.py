@@ -18,7 +18,7 @@ async def download(message: Message):
         "format": "best",
         "outtmpl": f"{dir_name}/%(title)s.%(ext)s",
         "concurrent_fragment_downloads": 5,
-        "cookies": os.path.abspath("cookies.txt")
+        "cookies": "/home/ubuntu/Downloader/cookies.txt"
     }
 
     try:
