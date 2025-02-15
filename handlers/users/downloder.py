@@ -7,7 +7,7 @@ import yt_dlp
 import browser_cookie3
 
 # Cookies'ni saqlash uchun fayl
-COOKIES_FILE = "cookies.txt"
+COOKIES_FILE = "/home/user/bots/Downloader/cookies.txt"
 
 
 def save_cookies():
