@@ -27,6 +27,9 @@ def save_cookies():
             f.write(line)
 
 
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB (baytlarda)
+
+
 @dp.message_handler()
 async def download(message: types.Message):
     url = message.text
@@ -49,6 +52,15 @@ async def download(message: types.Message):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             file_info = ydl.extract_info(url, download=True)
             file_path = ydl.prepare_filename(file_info)  # To‘liq fayl yo‘lini olish
+
+        # Fayl hajmini tekshirish
+        file_size = os.path.getsize(file_path)
+
+        if file_size > MAX_FILE_SIZE:
+            # Fayl hajmi katta bo'lsa, xabar berish
+            await message.reply("❌ Yuklab olish imkonsiz: video 50MB dan katta.")
+            os.remove(file_path)  # Faylni o'chirish
+            return
 
         if os.path.exists(file_path):
             with open(file_path, 'rb') as video:
