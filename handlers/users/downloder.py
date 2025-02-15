@@ -16,13 +16,14 @@ def save_cookies():
 
     with open(COOKIES_FILE, "w") as f:
         # Header qo'shish (kommentariyalar)
-        f.write("# Netscape format\n")
-        f.write("# Format: domain    host_path    secure    expiry_time    name    value\n")
+        f.write("# Netscape HTTP Cookie File\n")
+        f.write("# This is a generated file! Do not edit.\n\n")
+        f.write("#Domain    #HostOnly    #Path    #Secure    #Expiration    #Name    #Value\n")
 
         # Har bir cookie uchun satr yaratish va faylga yozish
         for c in cookies:
-            # Format: domain, path, secure, expiry, name, value
-            line = f"{c.domain}\t{c.path}\t{c.secure}\t{c.expires}\t{c.name}\t{c.value}\n"
+            # Format: domain, host_only, path, secure, expires, name, value
+            line = f"{c.domain}\tTRUE\t{c.path}\t{str(c.secure)}\t{str(c.expires)}\t{c.name}\t{c.value}\n"
             f.write(line)
 
 
