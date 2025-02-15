@@ -9,11 +9,22 @@ import browser_cookie3
 # Cookies'ni saqlash uchun fayl
 COOKIES_FILE = "cookies.txt"
 
+
 def save_cookies():
-    """Chrome'dan cookies olib, faylga saqlash"""
+    """Chrome'dan cookies olib, Netscape formatida saqlash"""
     cookies = browser_cookie3.chrome()
+
     with open(COOKIES_FILE, "w") as f:
-        f.write("\n".join([f"{c.domain}\t{c.path}\t{c.secure}\t{c.expires}\t{c.name}\t{c.value}" for c in cookies]))
+        # Header qo'shish (kommentariyalar)
+        f.write("# Netscape format\n")
+        f.write("# Format: domain    host_path    secure    expiry_time    name    value\n")
+
+        # Har bir cookie uchun satr yaratish va faylga yozish
+        for c in cookies:
+            # Format: domain, path, secure, expiry, name, value
+            line = f"{c.domain}\t{c.path}\t{c.secure}\t{c.expires}\t{c.name}\t{c.value}\n"
+            f.write(line)
+
 
 @dp.message_handler()
 async def download(message: types.Message):
