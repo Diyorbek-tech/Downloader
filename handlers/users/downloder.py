@@ -4,33 +4,44 @@ from aiogram.types import Message
 from loader import dp
 from aiogram import types
 import yt_dlp
+import browser_cookie3
 
+# Cookies'ni saqlash uchun fayl
+COOKIES_FILE = "cookies.txt"
+
+def save_cookies():
+    """Chrome'dan cookies olib, faylga saqlash"""
+    cookies = browser_cookie3.chrome()
+    with open(COOKIES_FILE, "w") as f:
+        f.write("\n".join([f"{c.domain}\t{c.path}\t{c.secure}\t{c.expires}\t{c.name}\t{c.value}" for c in cookies]))
 
 @dp.message_handler()
 async def download(message: types.Message):
     url = message.text
-
     await message.reply("⏳ Yuklanmoqda...")
 
     dir_name = "downloads"
     os.makedirs(dir_name, exist_ok=True)
 
+    # Cookies'ni yangilash
+    save_cookies()
+
     ydl_opts = {
         "format": "best",
         "outtmpl": f"{dir_name}/%(title)s.%(ext)s",
         "concurrent_fragment_downloads": 5,
-        "cookiefile": "/home/ubuntu/Downloader/cookies.txt"  # 'cookies' fayli yo'li
+        "cookiefile": COOKIES_FILE  # Cookies'ni fayldan o'qish
     }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             file_info = ydl.extract_info(url, download=True)
-            file_name = ydl.prepare_filename(file_info)
+            file_path = ydl.prepare_filename(file_info)  # To‘liq fayl yo‘lini olish
 
-        if os.path.exists(file_name):
-            with open(file_name, 'rb') as video:
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as video:
                 await message.answer_video(video=types.InputFile(video))
-            os.remove(file_name)
+            os.remove(file_path)  # Foydalanuvchiga jo‘natilgach, faylni o‘chirish
         else:
             await message.reply("❌ Yuklab olishda xatolik yuz berdi: Fayl topilmadi.")
 
